@@ -1,4 +1,4 @@
-package com.winxo.PortailEnelpWs.auth;
+package com.winxo.PortailEnelpWs.dao.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,11 +7,13 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequest {
-
+@AllArgsConstructor
+public class SignUpRequest
+{
+    private String firstName;
+    private String lastName;
     private String username;
     private String password;
-
+    private String email;
 }
