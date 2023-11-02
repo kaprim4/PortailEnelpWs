@@ -1,5 +1,7 @@
 package com.winxo.PortailEnelpWs.dao.request;
 
+import com.winxo.PortailEnelpWs.entities.GasStation;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,4 +18,7 @@ public class SignUpRequest
     private String username;
     private String password;
     private String email;
+    private GasStation gasStation;
+    private Boolean isActivated;
+    private Boolean isDeleted;
 }

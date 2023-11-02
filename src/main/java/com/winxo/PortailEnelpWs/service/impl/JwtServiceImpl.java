@@ -1,11 +1,16 @@
 package com.winxo.PortailEnelpWs.service.impl;
 
+import java.io.IOException;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.winxo.PortailEnelpWs.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -43,11 +48,13 @@ public class JwtServiceImpl implements JwtService
 
     public Map<String, Object> getStringObjectMap(UserDetails userDetails) {
         Map<String,Object> claims = new HashMap<>();
-        var user = userRepository.findByUserName(userDetails.getUsername()).orElseThrow();;
+        var user = userRepository.findByUserName(userDetails.getUsername()).orElseThrow();
+        claims.put("firstName", user.getFirstName());
+        claims.put("lastName", user.getLastName());
         claims.put("username", user.getUsername());
-        claims.put("firstname", user.getFirstName());
-        claims.put("lastname", user.getLastName());
         claims.put("role", user.getRole().name());
+        claims.put("gas_station_id", user.getGasStation().getId());
+        claims.put("gas_station_code_sap", user.getGasStation().getCode_sap());
         return claims;
     }
 
@@ -63,10 +70,13 @@ public class JwtServiceImpl implements JwtService
     }
 
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
+        return Jwts.builder()
+                .setClaims(extraClaims)
+                .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
     private boolean isTokenExpired(String token) {

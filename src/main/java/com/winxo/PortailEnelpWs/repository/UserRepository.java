@@ -9,8 +9,7 @@ import com.winxo.PortailEnelpWs.entities.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer>
 {
-
-    @Query(value = "SELECT u FROM User u WHERE u.username LIKE :username")
+    @Query(value = "select u from User u inner join GasStation g on u.gasStation.id = g.id where u.username = :username")
     Optional<User> findByUserName(String username);
 
     Optional<User> findUserById(Integer id);
