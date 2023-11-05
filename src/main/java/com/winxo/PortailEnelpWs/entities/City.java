@@ -1,5 +1,6 @@
 package com.winxo.PortailEnelpWs.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -42,6 +43,7 @@ public class City
     @Column(nullable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "city", fetch = FetchType.EAGER)
     private List<GasStation> gasStations;
 

@@ -11,13 +11,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class JwtAuthenticationResponse {
-    private Integer id;
+    /*private Integer id;
     private String firstName;
     private String lastName;
     private String username;
     private String password;
     private String email;
-    private GasStation gasStation;
+    private Integer gasStation_id;
+    private String gasStation_code_sap;*/
     private String token;
-    private String avatar;
+    //private String avatar;
 }

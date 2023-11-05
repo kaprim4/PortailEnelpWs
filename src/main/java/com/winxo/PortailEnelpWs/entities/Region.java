@@ -1,5 +1,6 @@
 package com.winxo.PortailEnelpWs.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -35,6 +36,7 @@ public class Region {
     @Column(nullable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "region", fetch = FetchType.EAGER)
     private List<City> cities;
 

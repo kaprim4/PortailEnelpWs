@@ -3,8 +3,11 @@ package com.winxo.PortailEnelpWs.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "gas_station")
-public class GasStation
+public class GasStation implements Serializable
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,6 +54,7 @@ public class GasStation
     @Column(nullable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "gasStation", fetch = FetchType.EAGER)
     private List<User> users;
 

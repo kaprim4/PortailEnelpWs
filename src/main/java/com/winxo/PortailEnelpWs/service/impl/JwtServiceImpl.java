@@ -52,6 +52,7 @@ public class JwtServiceImpl implements JwtService
         claims.put("firstName", user.getFirstName());
         claims.put("lastName", user.getLastName());
         claims.put("username", user.getUsername());
+        claims.put("email", user.getEmail());
         claims.put("role", user.getRole().name());
         claims.put("gas_station_id", user.getGasStation().getId());
         claims.put("gas_station_code_sap", user.getGasStation().getCode_sap());

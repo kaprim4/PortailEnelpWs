@@ -1,7 +1,7 @@
 package com.winxo.PortailEnelpWs.service.impl;
 
 import com.winxo.PortailEnelpWs.entities.User;
-import com.winxo.PortailEnelpWs.exception.UserNotFoundException;
+import com.winxo.PortailEnelpWs.exception.NotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService
 
     public User findUserById(Integer id) {
         return userRepository.findUserById(id)
-                .orElseThrow(() -> new UserNotFoundException("User by id " + id + " was not found"));
+                .orElseThrow(() -> new NotFoundException("User by id " + id + " was not found"));
     }
 
     public void deleteUser(Integer id){

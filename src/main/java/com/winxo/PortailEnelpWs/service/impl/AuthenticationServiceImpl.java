@@ -57,12 +57,13 @@ public class AuthenticationServiceImpl implements AuthenticationService
         var jwt = jwtService.generateToken(user);
         return JwtAuthenticationResponse
                 .builder()
-                .id(user.getId())
+                /*.id(user.getId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .gasStation(user.getGasStation())
+                .gasStation_id(user.getGasStation().getId())
+                .gasStation_code_sap(user.getGasStation().getCode_sap())*/
                 .token(jwt)
                 .build();
     }
