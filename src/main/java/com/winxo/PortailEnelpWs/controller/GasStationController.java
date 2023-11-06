@@ -12,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/gas_stations")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 public class GasStationController {
 
     private final GasStationService gasStationService;
