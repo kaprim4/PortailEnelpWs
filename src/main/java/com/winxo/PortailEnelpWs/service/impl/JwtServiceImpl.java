@@ -49,11 +49,13 @@ public class JwtServiceImpl implements JwtService
     public Map<String, Object> getStringObjectMap(UserDetails userDetails) {
         Map<String,Object> claims = new HashMap<>();
         var user = userRepository.findByUserName(userDetails.getUsername()).orElseThrow();
+        claims.put("id", user.getId());
+        claims.put("role", user.getRole().name());
         claims.put("firstName", user.getFirstName());
         claims.put("lastName", user.getLastName());
         claims.put("username", user.getUsername());
         claims.put("email", user.getEmail());
-        claims.put("role", user.getRole().name());
+        claims.put("email", user.getEmail());
         claims.put("gas_station_id", user.getGasStation().getId());
         claims.put("gas_station_code_sap", user.getGasStation().getCode_sap());
         return claims;
@@ -73,7 +75,7 @@ public class JwtServiceImpl implements JwtService
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts.builder()
                 .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
+                //.setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)

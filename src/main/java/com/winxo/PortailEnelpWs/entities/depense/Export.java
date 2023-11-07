@@ -1,26 +1,32 @@
-package com.winxo.PortailEnelpWs.entities;
+package com.winxo.PortailEnelpWs.entities.depense;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Getter
 @Setter
-@Table(name = "region")
-public class Region {
+@Table(name = "z_depense_export")
+public class Export {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String libelle;
-    private String code;
+    private Long id_export;
+
+    @Column(columnDefinition = "longtext")
+    private String entete_list;
+
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")
+    private LocalDateTime date_export;
 
     @Column(columnDefinition = "boolean default 1")
     private Boolean isActivated;
@@ -36,13 +42,10 @@ public class Region {
     @Column(nullable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
 
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "region", fetch = FetchType.EAGER)
-    private List<City> cities;
-
-    public Region(String libelle, String code, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.libelle = libelle;
-        this.code = code;
+    public Export(Long id_export, String entete_list, LocalDateTime date_export, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id_export = id_export;
+        this.entete_list = entete_list;
+        this.date_export = date_export;
         this.isActivated = isActivated;
         this.isDeleted = isDeleted;
         this.createdAt = createdAt;

@@ -1,9 +1,13 @@
-package com.winxo.PortailEnelpWs.entities;
+package com.winxo.PortailEnelpWs.entities.depense;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -13,14 +17,13 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@Table(name = "region")
-public class Region {
+@Table(name = "z_depense_activites")
+public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
+    private Integer code;
     private String libelle;
-    private String code;
 
     @Column(columnDefinition = "boolean default 1")
     private Boolean isActivated;
@@ -36,13 +39,13 @@ public class Region {
     @Column(nullable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
 
+    @ManyToMany(mappedBy = "activities")
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "region", fetch = FetchType.EAGER)
-    private List<City> cities;
+    private List<Operation> operations;
 
-    public Region(String libelle, String code, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.libelle = libelle;
+    public Activity(Integer code, String libelle, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.code = code;
+        this.libelle = libelle;
         this.isActivated = isActivated;
         this.isDeleted = isDeleted;
         this.createdAt = createdAt;
