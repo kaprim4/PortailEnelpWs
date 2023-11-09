@@ -34,7 +34,7 @@ public class AuthenticationServiceImpl implements AuthenticationService
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .email(request.getEmail())
-                .role(nb_user == 0 ? Role.ADMIN : Role.USER)
+                .role(request.getRole())
                 .gasStation(request.getGasStation())
                 .isActivated(request.getIsActivated())
                 .isDeleted(request.getIsDeleted())
@@ -53,18 +53,8 @@ public class AuthenticationServiceImpl implements AuthenticationService
                 )
         );
         var user = userRepository.findByUserName(request.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password."));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid username or password."));
         var jwt = jwtService.generateToken(user);
-        return JwtAuthenticationResponse
-                .builder()
-                /*.id(user.getId())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .gasStation_id(user.getGasStation().getId())
-                .gasStation_code_sap(user.getGasStation().getCode_sap())*/
-                .token(jwt)
-                .build();
+        return JwtAuthenticationResponse.builder().token(jwt).build();
     }
 }

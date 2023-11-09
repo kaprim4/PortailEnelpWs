@@ -50,11 +50,11 @@ public class JwtServiceImpl implements JwtService
         Map<String,Object> claims = new HashMap<>();
         var user = userRepository.findByUserName(userDetails.getUsername()).orElseThrow();
         claims.put("id", user.getId());
-        claims.put("role", user.getRole().name());
+        claims.put("role_id", user.getRole().getId());
+        claims.put("role_name", user.getRole().getLibelle());
         claims.put("firstName", user.getFirstName());
         claims.put("lastName", user.getLastName());
         claims.put("username", user.getUsername());
-        claims.put("email", user.getEmail());
         claims.put("email", user.getEmail());
         claims.put("gas_station_id", user.getGasStation().getId());
         claims.put("gas_station_code_sap", user.getGasStation().getCode_sap());

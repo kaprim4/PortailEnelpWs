@@ -33,7 +33,8 @@ public class User implements UserDetails
     private String password;
     private String email;
 
-    @Enumerated(EnumType.STRING)
+    @ManyToOne(targetEntity = Role.class)
+    @JoinColumn(nullable = false, columnDefinition="integer")
     private Role role;
 
     @ManyToOne(targetEntity = GasStation.class)
@@ -56,7 +57,7 @@ public class User implements UserDetails
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority(this.role.getLibelle()));
     }
 
     @Override
