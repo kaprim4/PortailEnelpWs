@@ -2,13 +2,14 @@ package com.winxo.PortailEnelpWs.service.impl;
 
 import com.winxo.PortailEnelpWs.entities.User;
 import com.winxo.PortailEnelpWs.exception.NotFoundException;
+import com.winxo.PortailEnelpWs.repository.UserRepository;
+import com.winxo.PortailEnelpWs.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import com.winxo.PortailEnelpWs.repository.UserRepository;
-import com.winxo.PortailEnelpWs.service.UserService;
+
 import java.util.List;
 
 @Service
@@ -29,16 +30,16 @@ public class UserServiceImpl implements UserService
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    public User addUser(User employee) {
-        return userRepository.save(employee);
+    public User addUser(User user) {
+        return userRepository.save(user);
     }
 
     public List<User> findAllUsers() {
         return userRepository.findAll();
     }
 
-    public User updateUser(User employee) {
-        return userRepository.save(employee);
+    public User updateUser(User user) {
+        return userRepository.save(user);
     }
 
     public User findUserById(Integer id) {
