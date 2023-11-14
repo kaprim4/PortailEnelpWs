@@ -7,6 +7,7 @@ import com.winxo.PortailEnelpWs.service.GasStationService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -21,16 +22,16 @@ public class GasStationServiceImpl implements GasStationService
         this.gasStationRepository = gasStationRepository;
     }
 
-    public GasStation addGasStation(GasStation employee) {
-        return gasStationRepository.save(employee);
+    public GasStation addGasStation(GasStation gasStation) {
+        return gasStationRepository.save(gasStation);
     }
 
     public List<GasStation> findAllGasStations() {
         return gasStationRepository.findAll();
     }
 
-    public GasStation updateGasStation(GasStation employee) {
-        return gasStationRepository.save(employee);
+    public GasStation updateGasStation(GasStation gasStation) {
+        return gasStationRepository.save(gasStation);
     }
 
     public GasStation findGasStationById(Integer id) {
@@ -38,7 +39,7 @@ public class GasStationServiceImpl implements GasStationService
                 .orElseThrow(() -> new NotFoundException("GasStation by id " + id + " was not found"));
     }
 
-    public void deleteGasStation(Integer id){
-        gasStationRepository.deleteGasStationById(id);
+    public void deleteGasStation(Integer id) {
+        gasStationRepository.deleteById(id);
     }
 }

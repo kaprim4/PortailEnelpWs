@@ -1,7 +1,5 @@
 package com.winxo.PortailEnelpWs.controller;
 
-import com.winxo.PortailEnelpWs.dao.request.SignUpRequest;
-import com.winxo.PortailEnelpWs.dao.response.JwtAuthenticationResponse;
 import com.winxo.PortailEnelpWs.entities.GasStation;
 import com.winxo.PortailEnelpWs.entities.Role;
 import com.winxo.PortailEnelpWs.entities.User;
@@ -9,13 +7,13 @@ import com.winxo.PortailEnelpWs.repository.UserRepository;
 import com.winxo.PortailEnelpWs.service.GasStationService;
 import com.winxo.PortailEnelpWs.service.RoleService;
 import com.winxo.PortailEnelpWs.service.UserService;
-import com.winxo.PortailEnelpWs.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -33,8 +31,9 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+
     @GetMapping("/all")
-    public ResponseEntity<List<User>> getAllUsers () {
+    public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.findAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
@@ -53,7 +52,7 @@ public class UserController {
     }
 
     @GetMapping("/find/{id}")
-    public ResponseEntity<User> getUserById (@PathVariable("id") Integer id) {
+    public ResponseEntity<User> getUserById(@PathVariable("id") Integer id) {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -76,8 +75,10 @@ public class UserController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable("id") Integer id) {
+        Optional<User> userOptional = userRepository.findUserById(id);
+        if (userOptional.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         userService.deleteUser(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }

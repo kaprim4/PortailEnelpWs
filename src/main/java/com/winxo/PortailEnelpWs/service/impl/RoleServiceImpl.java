@@ -12,34 +12,35 @@ import java.util.List;
 
 @Service
 @Transactional
-public class roleServiceImpl implements RoleService
+public class RoleServiceImpl implements RoleService
 {
 
-    private final RoleRepository gasStationRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public roleServiceImpl(RoleRepository gasStationRepository) {
-        this.gasStationRepository = gasStationRepository;
+    public RoleServiceImpl(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
     }
 
-    public Role addRole(Role employee) {
-        return gasStationRepository.save(employee);
+    public Role addRole(Role role) {
+        return roleRepository.save(role);
     }
 
     public List<Role> findAllRoles() {
-        return gasStationRepository.findAll();
+        return roleRepository.findAll();
     }
 
     public Role updateRole(Role role) {
-        return gasStationRepository.save(role);
+        return roleRepository.save(role);
     }
 
     public Role findRoleById(Integer id) {
-        return gasStationRepository.findRoleById(id)
+        return roleRepository
+                .findRoleById(id)
                 .orElseThrow(() -> new NotFoundException("Role by id " + id + " was not found"));
     }
 
-    public void deleteRole(Integer id){
-        gasStationRepository.deleteRoleById(id);
+    public void deleteRole(Integer id) {
+        roleRepository.deleteById(id);
     }
 }
