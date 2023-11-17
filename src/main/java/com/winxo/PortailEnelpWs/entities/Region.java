@@ -37,7 +37,7 @@ public class Region {
     private LocalDateTime updatedAt;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "region", fetch = FetchType.EAGER)
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "region")
     private List<City> cities;
 
     public Region(String libelle, String code, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {

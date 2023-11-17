@@ -41,7 +41,7 @@ public class Supervisor
     private LocalDateTime updatedAt;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "supervisor", fetch = FetchType.EAGER)
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "supervisor")
     private List<GasStation> gasStations;
 
     public Supervisor(String firstName, String lastName, String email, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {

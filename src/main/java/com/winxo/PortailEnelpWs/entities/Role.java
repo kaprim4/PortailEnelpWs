@@ -39,7 +39,7 @@ public class Role {
     private LocalDateTime updatedAt;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "role", fetch = FetchType.EAGER)
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "role")
     private List<User> users;
 
     public Role(String libelle, String alias, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {

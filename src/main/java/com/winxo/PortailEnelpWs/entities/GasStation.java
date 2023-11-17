@@ -1,5 +1,6 @@
 package com.winxo.PortailEnelpWs.entities;
 
+import com.winxo.PortailEnelpWs.entities.bons.VoucherTemp;
 import com.winxo.PortailEnelpWs.entities.depense.Entete;
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,8 +8,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @NoArgsConstructor
@@ -57,12 +56,20 @@ public class GasStation implements Serializable
     private LocalDateTime updatedAt;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "gasStation", fetch = FetchType.EAGER)
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "gasStation")
     private List<User> users;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "gasStation", fetch = FetchType.EAGER)
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "gasStation")
     private List<Entete> depenseEntetes;
+
+    @JsonIgnore
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "gasStation")
+    private List<VoucherTemp> gasStationTemps;
+
+    @JsonIgnore
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "gasStation")
+    private List<VoucherTemp> gasStationTempOrigins;
 
     public GasStation(Company company, Supervisor supervisor, City city, String code_sap, String libelle, String zip_code, String address, String latitude, String longitude, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.company = company;

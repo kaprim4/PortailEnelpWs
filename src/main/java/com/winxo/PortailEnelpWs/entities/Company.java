@@ -37,7 +37,7 @@ public class Company
     private LocalDateTime updatedAt;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "company", fetch = FetchType.EAGER)
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "company")
     private List<GasStation> gasStations;
 
     public Company(String libelle, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {

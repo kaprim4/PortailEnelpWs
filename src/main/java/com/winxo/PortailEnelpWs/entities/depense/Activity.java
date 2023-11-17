@@ -39,8 +39,8 @@ public class Activity {
     @Column(nullable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
 
-    @ManyToMany(mappedBy = "activities")
     @JsonIgnore
+    @ManyToMany(mappedBy = "activities")
     private List<Operation> operations;
 
     public Activity(Integer code, String libelle, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
