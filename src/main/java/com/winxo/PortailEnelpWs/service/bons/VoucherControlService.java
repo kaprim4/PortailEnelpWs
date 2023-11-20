@@ -11,6 +11,8 @@ public interface VoucherControlService {
 
     VoucherControl findVoucherControlById(Integer id);
 
+    VoucherControl findVoucherControlByVoucherNumber(String voucherNumber);
+
     VoucherControl addVoucherControl(VoucherControl voucherTemp);
 
     VoucherControl updateVoucherControl(VoucherControl voucherTemp);

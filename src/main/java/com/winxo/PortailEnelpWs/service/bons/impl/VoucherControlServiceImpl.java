@@ -33,6 +33,12 @@ public class VoucherControlServiceImpl implements VoucherControlService
         return voucherControlRepository.save(VoucherControl);
     }
 
+    public VoucherControl findVoucherControlByVoucherNumber(String voucherNumber) {
+        return voucherControlRepository
+                .findVoucherControlByVoucherNumber(voucherNumber)
+                .orElseThrow(() -> new NotFoundException("VoucherTemp by voucherNumber " + voucherNumber + " was not found"));
+    }
+
     public VoucherControl findVoucherControlById(Integer id) {
         return voucherControlRepository
                 .findVoucherControlById(id)

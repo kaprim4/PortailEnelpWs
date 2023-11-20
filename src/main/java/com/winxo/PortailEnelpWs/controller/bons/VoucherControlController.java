@@ -1,6 +1,7 @@
 package com.winxo.PortailEnelpWs.controller.bons;
 
 import com.winxo.PortailEnelpWs.entities.bons.VoucherControl;
+import com.winxo.PortailEnelpWs.entities.bons.VoucherTemp;
 import com.winxo.PortailEnelpWs.repository.bons.VoucherControlRepository;
 import com.winxo.PortailEnelpWs.service.bons.VoucherControlService;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,15 @@ public class VoucherControlController {
         if (voucherTempOptional.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         VoucherControl voucherTemp = voucherControlService.findVoucherControlById(id);
+        return new ResponseEntity<>(voucherTemp, HttpStatus.OK);
+    }
+
+    @GetMapping("/find/number/{voucherNumber}")
+    public ResponseEntity<VoucherControl> getVoucherTempByVoucherNumber (@PathVariable("voucherNumber") String voucherNumber) {
+        Optional<VoucherControl> voucherTempOptional = voucherControlRepository.findVoucherControlByVoucherNumber(voucherNumber);
+        if (voucherTempOptional.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        VoucherControl voucherTemp = voucherControlService.findVoucherControlByVoucherNumber(voucherNumber);
         return new ResponseEntity<>(voucherTemp, HttpStatus.OK);
     }
 
