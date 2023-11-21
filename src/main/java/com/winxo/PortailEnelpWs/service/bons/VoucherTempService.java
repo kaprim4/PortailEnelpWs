@@ -12,6 +12,8 @@ public interface VoucherTempService {
 
     VoucherTemp findVoucherTempByVoucherNumber(String voucherNumber);
 
+    List<?> findVoucherTempStatistic();
+
     VoucherTemp addVoucherTemp(VoucherTemp voucherTemp);
 
     VoucherTemp updateVoucherTemp(VoucherTemp voucherTemp);

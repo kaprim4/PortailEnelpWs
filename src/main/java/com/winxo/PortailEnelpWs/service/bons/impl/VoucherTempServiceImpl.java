@@ -38,10 +38,15 @@ public class VoucherTempServiceImpl implements VoucherTempService
                 .findVoucherTempById(id)
                 .orElseThrow(() -> new NotFoundException("VoucherTemp by id " + id + " was not found"));
     }
+
     public VoucherTemp findVoucherTempByVoucherNumber(String voucherNumber) {
         return voucherTempRepository
                 .findVoucherTempByVoucherNumber(voucherNumber)
                 .orElseThrow(() -> new NotFoundException("VoucherTemp by voucherNumber " + voucherNumber + " was not found"));
+    }
+
+    public List<?> findVoucherTempStatistic() {
+        return voucherTempRepository.findVoucherTempStatistic();
     }
 
     public void deleteVoucherTemp(Integer id) {

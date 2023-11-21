@@ -50,9 +50,18 @@ public class VoucherTempController {
     public ResponseEntity<VoucherTemp> getVoucherTempByVoucherNumber (@PathVariable("voucherNumber") String voucherNumber) {
         Optional<VoucherTemp> voucherTempOptional = voucherTempRepository.findVoucherTempByVoucherNumber(voucherNumber);
         if (voucherTempOptional.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.OK);
         VoucherTemp voucherTemp = voucherTempService.findVoucherTempByVoucherNumber(voucherNumber);
         return new ResponseEntity<>(voucherTemp, HttpStatus.OK);
+    }
+
+    @GetMapping("/find/sum")
+    public ResponseEntity<List<?>> findVoucherTempStatistic () {
+        List<?> voucherNumber = voucherTempRepository.findVoucherTempStatistic();
+        if (voucherNumber.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        List<?> voucherTempStatistic = voucherTempService.findVoucherTempStatistic();
+        return new ResponseEntity<>(voucherTempStatistic, HttpStatus.OK);
     }
 
     @PutMapping("/update")
