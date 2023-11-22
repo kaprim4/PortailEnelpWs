@@ -18,7 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Controller
 @RequestMapping("/api/v1/storage")
-@CrossOrigin("http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:4200")
 public class FileController {
 
     @Autowired
