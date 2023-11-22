@@ -64,5 +64,4 @@ public class VoucherTypeController {
         voucherTypeService.deleteVoucherType(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }
