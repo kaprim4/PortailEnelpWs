@@ -25,6 +25,8 @@ public class VoucherType {
 
     private String libelle;
 
+    private String imageName;
+
     @Column(columnDefinition = "boolean default 1")
     private Boolean isActivated;
 
@@ -43,12 +45,13 @@ public class VoucherType {
     @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "voucherType")
     private List<VoucherTemp> voucherTemps;
 
-
-    public VoucherType(String libelle, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public VoucherType(String libelle, String imageName, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt, List<VoucherTemp> voucherTemps) {
         this.libelle = libelle;
+        this.imageName = imageName;
         this.isActivated = isActivated;
         this.isDeleted = isDeleted;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.voucherTemps = voucherTemps;
     }
 }
