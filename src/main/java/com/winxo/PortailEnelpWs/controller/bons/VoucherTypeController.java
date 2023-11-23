@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/voucher-types")
+@RequestMapping("/api/v1/vouchers-type")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:4200")
 public class VoucherTypeController {

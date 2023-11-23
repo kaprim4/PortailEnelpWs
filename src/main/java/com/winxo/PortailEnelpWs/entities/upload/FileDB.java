@@ -1,7 +1,6 @@
 package com.winxo.PortailEnelpWs.entities.upload;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.winxo.PortailEnelpWs.entities.City;
 import com.winxo.PortailEnelpWs.entities.bons.VoucherType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
