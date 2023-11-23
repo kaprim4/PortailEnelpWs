@@ -44,13 +44,12 @@ public class VoucherCustomer {
     @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "voucherCustomer")
     private List<VoucherControl> voucherControls;
 
-    public VoucherCustomer(String libelle, String codeSap, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt, List<VoucherControl> voucherControls) {
+    public VoucherCustomer(String libelle, String codeSap, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.libelle = libelle;
         this.codeSap = codeSap;
         this.isActivated = isActivated;
         this.isDeleted = isDeleted;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.voucherControls = voucherControls;
     }
 }

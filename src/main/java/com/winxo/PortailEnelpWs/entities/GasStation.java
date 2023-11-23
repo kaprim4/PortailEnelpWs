@@ -1,5 +1,7 @@
 package com.winxo.PortailEnelpWs.entities;
 
+import com.winxo.PortailEnelpWs.entities.bons.VoucherHeader;
+import com.winxo.PortailEnelpWs.entities.bons.VoucherLine;
 import com.winxo.PortailEnelpWs.entities.bons.VoucherTemp;
 import com.winxo.PortailEnelpWs.entities.depense.Entete;
 import jakarta.persistence.*;
@@ -64,12 +66,12 @@ public class GasStation implements Serializable
     private List<Entete> depenseEntetes;
 
     @JsonIgnore
-    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "gasStation")
-    private List<VoucherTemp> gasStationTemps;
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "gasStationOrigin")
+    private List<VoucherTemp> gasStationTempOrigins;
 
     @JsonIgnore
     @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "gasStation")
-    private List<VoucherTemp> gasStationTempOrigins;
+    private List<VoucherHeader> voucherLines;
 
     public GasStation(Company company, Supervisor supervisor, City city, String code_sap, String libelle, String zip_code, String address, String latitude, String longitude, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.company = company;

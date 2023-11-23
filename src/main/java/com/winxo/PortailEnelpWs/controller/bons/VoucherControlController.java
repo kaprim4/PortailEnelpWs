@@ -1,7 +1,9 @@
 package com.winxo.PortailEnelpWs.controller.bons;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.winxo.PortailEnelpWs.entities.bons.VoucherControl;
 import com.winxo.PortailEnelpWs.entities.bons.VoucherTemp;
+import com.winxo.PortailEnelpWs.entities.views.View;
 import com.winxo.PortailEnelpWs.repository.bons.VoucherControlRepository;
 import com.winxo.PortailEnelpWs.service.bons.VoucherControlService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class VoucherControlController {
     private VoucherControlRepository voucherControlRepository;
 
     @GetMapping("/all")
+    @JsonView(View.Summary.class)
     public ResponseEntity<List<VoucherControl>> getAllVoucherControls () {
         List<VoucherControl> voucherTemps = voucherControlService.findAllVoucherControls();
         return new ResponseEntity<>(voucherTemps, HttpStatus.OK);

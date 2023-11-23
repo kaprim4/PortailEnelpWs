@@ -1,11 +1,13 @@
 package com.winxo.PortailEnelpWs.entities.bons;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.winxo.PortailEnelpWs.entities.GasStation;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,15 +25,15 @@ public class VoucherTemp
     @JoinColumn(nullable = false)
     private VoucherType voucherType;
 
+    @ManyToOne(targetEntity = VoucherHeader.class)
+    @JoinColumn(nullable = false)
+    private VoucherHeader voucherHeader;
+
     private String voucherNumber;
     private String slipNumber;
     private String barcode;
     private String vehiculeNumber;
     private LocalDate voucherDate;
-
-    @ManyToOne(targetEntity = GasStation.class)
-    @JoinColumn(nullable = false)
-    private GasStation gasStation;
 
     @ManyToOne(targetEntity = GasStation.class)
     private GasStation gasStationOrigin;
@@ -55,14 +57,18 @@ public class VoucherTemp
     @Column(nullable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
 
-    public VoucherTemp(VoucherType voucherType, String voucherNumber, String slipNumber, String barcode, String vehiculeNumber, LocalDate voucherDate, GasStation gasStation, GasStation gasStationOrigin, String poste_produit, Long voucherAmount, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    @JsonIgnore
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "voucherTemp")
+    private List<VoucherLine> voucherLines;
+
+    public VoucherTemp(VoucherType voucherType, VoucherHeader voucherHeader, String voucherNumber, String slipNumber, String barcode, String vehiculeNumber, LocalDate voucherDate, GasStation gasStationOrigin, String poste_produit, Long voucherAmount, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.voucherType = voucherType;
+        this.voucherHeader = voucherHeader;
         this.voucherNumber = voucherNumber;
         this.slipNumber = slipNumber;
         this.barcode = barcode;
         this.vehiculeNumber = vehiculeNumber;
         this.voucherDate = voucherDate;
-        this.gasStation = gasStation;
         this.gasStationOrigin = gasStationOrigin;
         this.poste_produit = poste_produit;
         this.voucherAmount = voucherAmount;
