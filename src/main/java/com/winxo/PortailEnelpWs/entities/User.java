@@ -41,6 +41,12 @@ public class User implements UserDetails {
     @JoinColumn(nullable = false, columnDefinition = "integer")
     private GasStation gasStation;
 
+    private String imageName;
+    private String imageType;
+
+    @Column(columnDefinition = "longblob")
+    private byte[] imageData;
+
     @Column(nullable = false, columnDefinition = "boolean default 1")
     private Boolean isActivated;
 
@@ -85,7 +91,7 @@ public class User implements UserDetails {
         return true;
     }
 
-    public User(String firstName, String lastName, String username, String password, String email, Role role, GasStation gasStation, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public User(String firstName, String lastName, String username, String password, String email, Role role, GasStation gasStation, String imageName, String imageType, byte[] imageData, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -93,6 +99,9 @@ public class User implements UserDetails {
         this.email = email;
         this.role = role;
         this.gasStation = gasStation;
+        this.imageName = imageName;
+        this.imageType = imageType;
+        this.imageData = imageData;
         this.isActivated = isActivated;
         this.isDeleted = isDeleted;
         this.createdAt = createdAt;

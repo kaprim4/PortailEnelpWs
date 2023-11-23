@@ -1,11 +1,14 @@
 package com.winxo.PortailEnelpWs.controller.upload;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.winxo.PortailEnelpWs.entities.City;
 import com.winxo.PortailEnelpWs.entities.upload.FileDB;
 import com.winxo.PortailEnelpWs.entities.upload.ResponseFile;
 import com.winxo.PortailEnelpWs.entities.upload.ResponseMessage;
+import com.winxo.PortailEnelpWs.repository.upload.FileDBRepository;
 import com.winxo.PortailEnelpWs.service.upload.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -21,48 +24,56 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @CrossOrigin(origins = "http://localhost:4200")
 public class FileController {
 
+    private final FileStorageService fileStorageService;
+
     @Autowired
-    private FileStorageService storageService;
+    private FileDBRepository fileDBRepository;
+
+    public FileController(FileStorageService fileStorageService) {
+        this.fileStorageService = fileStorageService;
+    }
 
     @PostMapping("/upload")
-    public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
-        String message = "";
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
-            storageService.store(file);
-            message = "Uploaded the file successfully: " + file.getOriginalFilename();
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+            FileDB fileDB = fileStorageService.store(file);
+            return new ResponseEntity<>(fileDB, HttpStatus.OK);
         } catch (Exception e) {
-            message = "Could not upload the file: " + file.getOriginalFilename() + "!";
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+            String msg = "Could not upload the file: " + file.getOriginalFilename() + "!";
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(msg));
         }
     }
 
     @GetMapping("/files")
     public ResponseEntity<List<ResponseFile>> getListFiles() {
-        List<ResponseFile> files = storageService.getAllFiles().map(dbFile -> {
+        List<ResponseFile> files = fileStorageService.getAllFiles().map(dbFile -> {
             String fileDownloadUri = ServletUriComponentsBuilder
                     .fromCurrentContextPath()
                     .path("/files/")
                     .path(dbFile.getId())
                     .toUriString();
             return new ResponseFile(
-                    dbFile.getName(),
+                    dbFile.getImageName(),
                     fileDownloadUri,
-                    dbFile.getType(),
-                    dbFile.getData().length);
+                    dbFile.getImageType(),
+                    dbFile.getImageData().length,
+                    dbFile.getIsActivated(),
+                    dbFile.getIsDeleted(),
+                    dbFile.getCreatedAt(),
+                    dbFile.getUpdatedAt());
         }).collect(Collectors.toList());
-
         return ResponseEntity.status(HttpStatus.OK).body(files);
     }
 
     @GetMapping("/files/{id}")
-    public ResponseEntity<byte[]> getFile(@PathVariable String id) {
-        FileDB fileDB = storageService.getFile(id);
-        return ResponseEntity.ok()
-                .header(
-                        HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=\"" + fileDB.getName() + "\""
-                )
-                .body(fileDB.getData());
+    public ResponseEntity<byte[]> findFileDBById(@PathVariable String id) {
+        Optional<FileDB> fileDBOptional = fileDBRepository.findFileDBById(id);
+        if (fileDBOptional.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        FileDB fileDB_found = fileStorageService.findFileDBById(id);
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDB_found.getImageName() + "\"")
+                .body(fileDB_found.getImageData());
     }
 }

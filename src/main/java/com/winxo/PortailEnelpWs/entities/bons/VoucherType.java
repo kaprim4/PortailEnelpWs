@@ -2,6 +2,8 @@ package com.winxo.PortailEnelpWs.entities.bons;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.winxo.PortailEnelpWs.entities.City;
+import com.winxo.PortailEnelpWs.entities.Region;
+import com.winxo.PortailEnelpWs.entities.upload.FileDB;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +27,9 @@ public class VoucherType {
 
     private String libelle;
 
-    private String imageName;
+    @ManyToOne(targetEntity = FileDB.class)
+    @JoinColumn(nullable = true)
+    private FileDB file;
 
     @Column(columnDefinition = "boolean default 1")
     private Boolean isActivated;
@@ -41,17 +45,12 @@ public class VoucherType {
     @Column(nullable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
 
-    @JsonIgnore
-    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "voucherType")
-    private List<VoucherTemp> voucherTemps;
-
-    public VoucherType(String libelle, String imageName, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt, List<VoucherTemp> voucherTemps) {
+    public VoucherType(String libelle, FileDB file, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.libelle = libelle;
-        this.imageName = imageName;
+        this.file = file;
         this.isActivated = isActivated;
         this.isDeleted = isDeleted;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.voucherTemps = voucherTemps;
     }
 }

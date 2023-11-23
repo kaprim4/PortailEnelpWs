@@ -33,7 +33,6 @@ public class VoucherTempController {
     public ResponseEntity<VoucherTemp> addVoucherTemp(@RequestBody VoucherTemp voucherTemp) {
         voucherTemp.setIsDeleted(false);
         VoucherTemp voucherTemp1 = voucherTempService.addVoucherTemp(voucherTemp);
-        System.out.println(voucherTemp1);
         return new ResponseEntity<>(voucherTemp1, HttpStatus.OK);
     }
 
@@ -84,13 +83,4 @@ public class VoucherTempController {
         voucherTempService.deleteVoucherTemp(voucherTemp.getId());
         return new ResponseEntity<>(voucherTemp, HttpStatus.OK);
     }
-
-    @PostMapping("/upload")
-    public ResponseEntity<VoucherTemp> uploadVoucherTempImage(@RequestBody VoucherTemp voucherTemp) {
-        voucherTemp.setIsDeleted(false);
-        VoucherTemp voucherTemp1 = voucherTempService.addVoucherTemp(voucherTemp);
-        System.out.println(voucherTemp1);
-        return new ResponseEntity<>(voucherTemp1, HttpStatus.OK);
-    }
-
 }
