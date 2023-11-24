@@ -1,6 +1,7 @@
 package com.winxo.PortailEnelpWs.controller.bons;
 
 import com.winxo.PortailEnelpWs.entities.bons.VoucherHeader;
+import com.winxo.PortailEnelpWs.entities.upload.ResponseHeader;
 import com.winxo.PortailEnelpWs.repository.bons.VoucherHeaderRepository;
 import com.winxo.PortailEnelpWs.service.bons.VoucherHeaderService;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,34 @@ public class VoucherHeaderController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         VoucherHeader voucherHeader = voucherHeaderService.findVoucherHeaderById(id);
         return new ResponseEntity<>(voucherHeader, HttpStatus.OK);
+    }
+
+    @GetMapping("/find/slip_number/{slipNumber}")
+    public ResponseEntity<VoucherHeader> getVoucherHeaderBySlipNumber (@PathVariable("slipNumber") Long slipNumber) {
+        Optional<VoucherHeader> voucherHeaderOptional = voucherHeaderRepository.findVoucherHeaderBySlipNumber(slipNumber);
+        if (voucherHeaderOptional.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        VoucherHeader voucherHeader = voucherHeaderService.findVoucherHeaderBySlipNumber(slipNumber);
+        return new ResponseEntity<>(voucherHeader, HttpStatus.OK);
+    }
+
+    @GetMapping("/find/next/{gas_station_id}")
+    public ResponseEntity<ResponseHeader> getNextVoucherHeader (@PathVariable("gas_station_id") Integer gas_station_id) {
+        Optional<Long> nextVoucherHeader = voucherHeaderRepository.findNextVoucherHeader(gas_station_id);
+        Long maxSlipNumber = 0L;
+        Long nextSlipNumber = 1L;
+        ResponseHeader responseHeader = new ResponseHeader(
+                gas_station_id,
+                maxSlipNumber,
+                nextSlipNumber
+        );
+        if (nextVoucherHeader.isEmpty()){
+            return new ResponseEntity<>(responseHeader, HttpStatus.OK);
+        }
+        maxSlipNumber = voucherHeaderService.findNextVoucherHeader(gas_station_id);
+        responseHeader.setMaxSlipNumber(maxSlipNumber);
+        responseHeader.setNextSlipNumber(maxSlipNumber+1);
+        return new ResponseEntity<>(responseHeader, HttpStatus.OK);
     }
 
     @PutMapping("/update")

@@ -30,7 +30,6 @@ public class VoucherTemp
     private VoucherHeader voucherHeader;
 
     private String voucherNumber;
-    private String slipNumber;
     private String barcode;
     private String vehiculeNumber;
     private LocalDate voucherDate;
@@ -61,11 +60,10 @@ public class VoucherTemp
     @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "voucherTemp")
     private List<VoucherLine> voucherLines;
 
-    public VoucherTemp(VoucherType voucherType, VoucherHeader voucherHeader, String voucherNumber, String slipNumber, String barcode, String vehiculeNumber, LocalDate voucherDate, GasStation gasStationOrigin, String poste_produit, Long voucherAmount, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public VoucherTemp(VoucherType voucherType, VoucherHeader voucherHeader, String voucherNumber, String barcode, String vehiculeNumber, LocalDate voucherDate, GasStation gasStationOrigin, String poste_produit, Long voucherAmount, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.voucherType = voucherType;
         this.voucherHeader = voucherHeader;
         this.voucherNumber = voucherNumber;
-        this.slipNumber = slipNumber;
         this.barcode = barcode;
         this.vehiculeNumber = vehiculeNumber;
         this.voucherDate = voucherDate;

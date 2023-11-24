@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,7 +30,10 @@ public class VoucherHeader
     @JoinColumn(nullable = false)
     private GasStation gasStation;
 
-    private String number;
+    private Long slipNumber;
+
+    @Column(nullable = false, columnDefinition = "date")
+    private LocalDate voucherDate;
 
     @Column(columnDefinition = "boolean default 1")
     private Boolean isActivated;
@@ -48,9 +53,10 @@ public class VoucherHeader
     @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "voucherHeader")
     private List<VoucherTemp> voucherTemps;
 
-    public VoucherHeader(GasStation gasStation, String number, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public VoucherHeader(GasStation gasStation, Long slipNumber, LocalDate voucherDate, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.gasStation = gasStation;
-        this.number = number;
+        this.slipNumber = slipNumber;
+        this.voucherDate = voucherDate;
         this.isActivated = isActivated;
         this.isDeleted = isDeleted;
         this.createdAt = createdAt;
