@@ -52,11 +52,11 @@ public class VoucherControlController {
 
     @GetMapping("/find/number/{voucherNumber}")
     public ResponseEntity<VoucherControl> getVoucherTempByVoucherNumber (@PathVariable("voucherNumber") String voucherNumber) {
-        Optional<VoucherControl> voucherTempOptional = voucherControlRepository.findVoucherControlByVoucherNumber(voucherNumber);
-        if (voucherTempOptional.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        VoucherControl voucherTemp = voucherControlService.findVoucherControlByVoucherNumber(voucherNumber);
-        return new ResponseEntity<>(voucherTemp, HttpStatus.OK);
+        Optional<VoucherControl> voucherControlOptional = voucherControlRepository.findVoucherControlByVoucherNumber(voucherNumber);
+        if (voucherControlOptional.isEmpty())
+            return new ResponseEntity<>(HttpStatus.OK);
+        VoucherControl voucherControl = voucherControlService.findVoucherControlByVoucherNumber(voucherNumber);
+        return new ResponseEntity<>(voucherControl, HttpStatus.OK);
     }
 
     @PutMapping("/update")
