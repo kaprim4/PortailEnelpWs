@@ -35,6 +35,9 @@ public class VoucherHeader
     @Column(nullable = false, columnDefinition = "date")
     private LocalDate voucherDate;
 
+    @Column(columnDefinition = "boolean default 0")
+    private Boolean isDayOver;
+
     @Column(columnDefinition = "boolean default 1")
     private Boolean isActivated;
 
@@ -53,10 +56,11 @@ public class VoucherHeader
     @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "voucherHeader")
     private List<VoucherTemp> voucherTemps;
 
-    public VoucherHeader(GasStation gasStation, Long slipNumber, LocalDate voucherDate, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public VoucherHeader(GasStation gasStation, Long slipNumber, LocalDate voucherDate, Boolean isDayOver, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.gasStation = gasStation;
         this.slipNumber = slipNumber;
         this.voucherDate = voucherDate;
+        this.isDayOver = isDayOver;
         this.isActivated = isActivated;
         this.isDeleted = isDeleted;
         this.createdAt = createdAt;

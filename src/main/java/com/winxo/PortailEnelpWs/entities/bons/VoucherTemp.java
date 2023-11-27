@@ -32,7 +32,6 @@ public class VoucherTemp
     private String voucherNumber;
     private String barcode;
     private String vehiculeNumber;
-    private LocalDate voucherDate;
 
     @ManyToOne(targetEntity = GasStation.class)
     private GasStation gasStationOrigin;
@@ -60,13 +59,12 @@ public class VoucherTemp
     @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "voucherTemp")
     private List<VoucherLine> voucherLines;
 
-    public VoucherTemp(VoucherType voucherType, VoucherHeader voucherHeader, String voucherNumber, String barcode, String vehiculeNumber, LocalDate voucherDate, GasStation gasStationOrigin, String poste_produit, Long voucherAmount, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public VoucherTemp(VoucherType voucherType, VoucherHeader voucherHeader, String voucherNumber, String barcode, String vehiculeNumber, GasStation gasStationOrigin, String poste_produit, Long voucherAmount, Boolean isActivated, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.voucherType = voucherType;
         this.voucherHeader = voucherHeader;
         this.voucherNumber = voucherNumber;
         this.barcode = barcode;
         this.vehiculeNumber = vehiculeNumber;
-        this.voucherDate = voucherDate;
         this.gasStationOrigin = gasStationOrigin;
         this.poste_produit = poste_produit;
         this.voucherAmount = voucherAmount;
