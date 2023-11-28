@@ -12,13 +12,15 @@ public interface VoucherHeaderService {
 
     VoucherHeader findVoucherHeaderById(Integer id);
 
+    VoucherHeader findLastVoucherHeaderOpened();
+
     VoucherHeader findVoucherHeaderBySlipNumber(Long slipNumber);
 
     Long findNextVoucherHeader(Integer gas_station_id);
 
-    VoucherHeader addVoucherHeader(VoucherHeader voucherType);
+    VoucherHeader addVoucherHeader(VoucherHeader voucherHeader);
 
-    VoucherHeader updateVoucherHeader(VoucherHeader voucherType);
+    VoucherHeader updateVoucherHeader(VoucherHeader voucherHeader);
 
     void deleteVoucherHeader(Integer id);
 }

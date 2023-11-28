@@ -3,6 +3,7 @@ package com.winxo.PortailEnelpWs.service.bons.impl;
 import com.winxo.PortailEnelpWs.entities.bons.VoucherHeader;
 import com.winxo.PortailEnelpWs.exception.NotFoundException;
 import com.winxo.PortailEnelpWs.repository.bons.VoucherHeaderRepository;
+import com.winxo.PortailEnelpWs.repository.bons.VoucherTempRepository;
 import com.winxo.PortailEnelpWs.service.bons.VoucherHeaderService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,44 +16,52 @@ import java.util.List;
 public class VoucherHeaderServiceImpl implements VoucherHeaderService
 {
 
-    private final VoucherHeaderRepository voucherTypeRepository;
+    private final VoucherHeaderRepository voucherHeaderRepository;
+    private final VoucherTempRepository voucherTempRepository;
 
     @Autowired
-    public VoucherHeaderServiceImpl(VoucherHeaderRepository voucherTypeRepository) {
-        this.voucherTypeRepository = voucherTypeRepository;
+    public VoucherHeaderServiceImpl(VoucherHeaderRepository voucherTypeRepository, VoucherTempRepository voucherTempRepository) {
+        this.voucherHeaderRepository = voucherTypeRepository;
+        this.voucherTempRepository = voucherTempRepository;
     }
 
     public VoucherHeader addVoucherHeader(VoucherHeader voucherHeader) {
-        return voucherTypeRepository.save(voucherHeader);
+        return voucherHeaderRepository.save(voucherHeader);
     }
 
     public List<VoucherHeader> findAllVoucherHeaders() {
-        return voucherTypeRepository.findAll();
+        return voucherHeaderRepository.findAll();
     }
 
     public VoucherHeader updateVoucherHeader(VoucherHeader voucherHeader) {
-        return voucherTypeRepository.save(voucherHeader);
+        return voucherHeaderRepository.save(voucherHeader);
     }
 
     public VoucherHeader findVoucherHeaderById(Integer id) {
-        return voucherTypeRepository
+        return voucherHeaderRepository
                 .findVoucherHeaderById(id)
                 .orElseThrow(() -> new NotFoundException("VoucherHeader by id " + id + " was not found"));
     }
 
     public VoucherHeader findVoucherHeaderBySlipNumber(Long slipNumber) {
-        return voucherTypeRepository
+        return voucherHeaderRepository
                 .findVoucherHeaderBySlipNumber(slipNumber)
                 .orElseThrow(() -> new NotFoundException("VoucherHeader by slipNumber " + slipNumber + " was not found"));
     }
 
+    public VoucherHeader findLastVoucherHeaderOpened() {
+        return voucherHeaderRepository
+                .findLastVoucherHeaderOpened()
+                .orElseThrow(() -> new NotFoundException("VoucherHeader was not found"));
+    }
+
     public Long findNextVoucherHeader(Integer gas_station_id) {
-        return voucherTypeRepository
+        return voucherHeaderRepository
                 .findNextVoucherHeader(gas_station_id)
                 .orElseThrow(() -> new NotFoundException("Next VoucherHeader Number was not found"));
     }
 
     public void deleteVoucherHeader(Integer id) {
-        voucherTypeRepository.deleteById(id);
+        voucherHeaderRepository.deleteById(id);
     }
 }

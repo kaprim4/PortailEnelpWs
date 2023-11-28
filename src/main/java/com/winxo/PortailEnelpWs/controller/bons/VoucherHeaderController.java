@@ -1,8 +1,10 @@
 package com.winxo.PortailEnelpWs.controller.bons;
 
 import com.winxo.PortailEnelpWs.entities.bons.VoucherHeader;
+import com.winxo.PortailEnelpWs.entities.bons.VoucherHeaderResponse;
 import com.winxo.PortailEnelpWs.entities.upload.ResponseHeader;
 import com.winxo.PortailEnelpWs.repository.bons.VoucherHeaderRepository;
+import com.winxo.PortailEnelpWs.repository.bons.VoucherTempRepository;
 import com.winxo.PortailEnelpWs.service.bons.VoucherHeaderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,14 +23,26 @@ import java.util.Optional;
 public class VoucherHeaderController {
 
     private final VoucherHeaderService voucherHeaderService;
+    private final VoucherTempRepository voucherTempRepository;
 
     @Autowired
     private VoucherHeaderRepository voucherHeaderRepository;
 
     @GetMapping("/all")
-    public ResponseEntity<List<VoucherHeader>> getAllVoucherHeaders () {
+    public ResponseEntity<List<VoucherHeaderResponse>> getAllVoucherHeaders () {
         List<VoucherHeader> voucherHeaders = voucherHeaderService.findAllVoucherHeaders();
-        return new ResponseEntity<>(voucherHeaders, HttpStatus.OK);
+        List<VoucherHeaderResponse> result = new ArrayList<>();
+        for (VoucherHeader voucherHeader: voucherHeaders) {
+            Integer count = voucherTempRepository.getVoucherCountByHeader(voucherHeader.getId());
+            Long sum = voucherTempRepository.getVoucherSumByHeader(voucherHeader.getId());
+            VoucherHeaderResponse voucherHeaderResponse = new VoucherHeaderResponse();
+            voucherHeaderResponse.setId(voucherHeader.getId());
+            voucherHeaderResponse.setVoucherHeader(voucherHeader);
+            voucherHeaderResponse.setVoucherCount(count != null ? count : 0);
+            voucherHeaderResponse.setVoucherSum(sum != null ? sum : 0);
+            result.add(voucherHeaderResponse);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping("/add")
@@ -43,6 +58,15 @@ public class VoucherHeaderController {
         if (voucherHeaderOptional.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         VoucherHeader voucherHeader = voucherHeaderService.findVoucherHeaderById(id);
+        return new ResponseEntity<>(voucherHeader, HttpStatus.OK);
+    }
+
+    @GetMapping("/find/opened")
+    public ResponseEntity<?> getLastVoucherHeaderOpened () {
+        Optional<VoucherHeader> voucherHeaderOptional = voucherHeaderRepository.findLastVoucherHeaderOpened();
+        if (voucherHeaderOptional.isEmpty())
+            return new ResponseEntity<>(voucherHeaderOptional, HttpStatus.OK);
+        VoucherHeader voucherHeader = voucherHeaderService.findLastVoucherHeaderOpened();
         return new ResponseEntity<>(voucherHeader, HttpStatus.OK);
     }
 
