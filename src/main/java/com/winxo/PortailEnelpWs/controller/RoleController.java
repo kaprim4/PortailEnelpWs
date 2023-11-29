@@ -1,5 +1,6 @@
 package com.winxo.PortailEnelpWs.controller;
 
+import com.winxo.PortailEnelpWs.entities.City;
 import com.winxo.PortailEnelpWs.entities.GasStation;
 import com.winxo.PortailEnelpWs.entities.Role;
 import com.winxo.PortailEnelpWs.entities.User;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,13 +53,19 @@ public class RoleController {
 
     @PutMapping("/update")
     public ResponseEntity<Role> updateRole(@RequestBody Role role) {
-        Optional<Role> userOptional = roleRepository.findRoleById(role.getId());
-        if (userOptional.isEmpty())
+        if (roleRepository.findRoleById(role.getId()).isPresent()) {
+            Role role1 = roleRepository.findRoleById(role.getId()).get();
+            role1.setLibelle(role.getLibelle());
+            role1.setAlias(role.getAlias());
+            role1.setUpdatedAt(LocalDateTime.now());
+            role1.setIsDeleted(false);
+            role1.setIsActivated(role.getIsActivated());
+            roleRepository.save(role1);
+            System.out.println(role1);
+            return new ResponseEntity<>(role1, HttpStatus.OK);
+        }else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        role.setIsDeleted(false);
-        roleRepository.save(role);
-        System.out.println(role);
-        return new ResponseEntity<>(role, HttpStatus.OK);
+        }
     }
 
     @DeleteMapping("/delete/{id}")

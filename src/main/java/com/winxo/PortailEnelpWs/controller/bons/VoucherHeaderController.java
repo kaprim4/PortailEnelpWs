@@ -1,10 +1,13 @@
 package com.winxo.PortailEnelpWs.controller.bons;
 
+import com.winxo.PortailEnelpWs.entities.City;
+import com.winxo.PortailEnelpWs.entities.GasStation;
 import com.winxo.PortailEnelpWs.entities.bons.VoucherHeader;
 import com.winxo.PortailEnelpWs.entities.bons.VoucherHeaderResponse;
 import com.winxo.PortailEnelpWs.entities.upload.ResponseHeader;
 import com.winxo.PortailEnelpWs.repository.bons.VoucherHeaderRepository;
 import com.winxo.PortailEnelpWs.repository.bons.VoucherTempRepository;
+import com.winxo.PortailEnelpWs.service.GasStationService;
 import com.winxo.PortailEnelpWs.service.bons.VoucherHeaderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +28,7 @@ public class VoucherHeaderController {
 
     private final VoucherHeaderService voucherHeaderService;
     private final VoucherTempRepository voucherTempRepository;
+    private final GasStationService gasStationService;
 
     @Autowired
     private VoucherHeaderRepository voucherHeaderRepository;
@@ -61,12 +66,12 @@ public class VoucherHeaderController {
         return new ResponseEntity<>(voucherHeader, HttpStatus.OK);
     }
 
-    @GetMapping("/find/opened")
-    public ResponseEntity<?> getLastVoucherHeaderOpened () {
-        Optional<VoucherHeader> voucherHeaderOptional = voucherHeaderRepository.findLastVoucherHeaderOpened();
+    @GetMapping("/find/opened/{gas_station_id}")
+    public ResponseEntity<?> getLastVoucherHeaderOpened (@PathVariable("gas_station_id") Integer gas_station_id) {
+        Optional<VoucherHeader> voucherHeaderOptional = voucherHeaderRepository.findLastVoucherHeaderOpened(gas_station_id);
         if (voucherHeaderOptional.isEmpty())
             return new ResponseEntity<>(voucherHeaderOptional, HttpStatus.OK);
-        VoucherHeader voucherHeader = voucherHeaderService.findLastVoucherHeaderOpened();
+        VoucherHeader voucherHeader = voucherHeaderService.findLastVoucherHeaderOpened(gas_station_id);
         return new ResponseEntity<>(voucherHeader, HttpStatus.OK);
     }
 
@@ -99,14 +104,23 @@ public class VoucherHeaderController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<VoucherHeader> updateVoucherHeader(@RequestBody VoucherHeader voucherHeader) {
-        Optional<VoucherHeader> userOptional = voucherHeaderRepository.findVoucherHeaderById(voucherHeader.getId());
-        if (userOptional.isEmpty())
+    public ResponseEntity<?> updateVoucherHeader(@RequestBody VoucherHeader voucherHeader) {
+        if (voucherHeaderRepository.findVoucherHeaderById(voucherHeader.getId()).isPresent()) {
+            VoucherHeader voucherHeader1 = voucherHeaderRepository.findVoucherHeaderById(voucherHeader.getId()).get();
+            GasStation gasStation = gasStationService.findGasStationById(voucherHeader.getGasStation().getId());
+            voucherHeader1.setGasStation(gasStation);
+            voucherHeader1.setVoucherDate(voucherHeader.getVoucherDate());
+            voucherHeader1.setSlipNumber(voucherHeader.getSlipNumber());
+            voucherHeader1.setIsDayOver(voucherHeader.getIsDayOver());
+            voucherHeader1.setIsActivated(voucherHeader.getIsActivated());
+            voucherHeader1.setIsDeleted(false);
+            voucherHeader1.setUpdatedAt(LocalDateTime.now());
+            voucherHeaderRepository.save(voucherHeader1);
+            System.out.println(voucherHeader1);
+            return new ResponseEntity<>(voucherHeader1, HttpStatus.OK);
+        }else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        voucherHeader.setIsDeleted(false);
-        voucherHeaderRepository.save(voucherHeader);
-        System.out.println(voucherHeader);
-        return new ResponseEntity<>(voucherHeader, HttpStatus.OK);
+        }
     }
 
     @DeleteMapping("/delete/{id}")

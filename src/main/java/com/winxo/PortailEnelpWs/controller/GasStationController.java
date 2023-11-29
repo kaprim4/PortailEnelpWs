@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,19 +60,29 @@ public class GasStationController {
 
     @PutMapping("/update")
     public ResponseEntity<GasStation> updateGasStation(@RequestBody GasStation gasStation) {
-        Optional<GasStation> userOptional = gasStationRepository.findGasStationById(gasStation.getId());
-        if (userOptional.isEmpty())
+        if (gasStationRepository.findGasStationById(gasStation.getId()).isPresent()) {
+            GasStation gasStation1 = gasStationRepository.findGasStationById(gasStation.getId()).get();
+            Company company = companyService.findCompanyById(gasStation.getCompany().getId());
+            Supervisor supervisor = supervisorService.findSupervisorById(gasStation.getSupervisor().getId());
+            City city = cityService.findCityById(gasStation.getCity().getId());
+            gasStation1.setCompany(company);
+            gasStation1.setSupervisor(supervisor);
+            gasStation1.setCity(city);
+            gasStation1.setLibelle(gasStation.getLibelle());
+            gasStation1.setAddress(gasStation.getAddress());
+            gasStation1.setCode_sap(gasStation.getCode_sap());
+            gasStation1.setLatitude(gasStation.getLatitude());
+            gasStation1.setLongitude(gasStation.getLongitude());
+            gasStation1.setZip_code(gasStation.getZip_code());
+            gasStation1.setUpdatedAt(LocalDateTime.now());
+            gasStation1.setIsDeleted(false);
+            gasStation1.setIsActivated(gasStation.getIsActivated());
+            gasStationRepository.save(gasStation1);
+            System.out.println(gasStation1);
+            return new ResponseEntity<>(gasStation1, HttpStatus.OK);
+        }else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        Company company = companyService.findCompanyById(gasStation.getCompany().getId());
-        Supervisor supervisor = supervisorService.findSupervisorById(gasStation.getSupervisor().getId());
-        City city = cityService.findCityById(gasStation.getCity().getId());
-        gasStation.setCompany(company);
-        gasStation.setSupervisor(supervisor);
-        gasStation.setCity(city);
-        gasStation.setIsDeleted(false);
-        gasStationRepository.save(gasStation);
-        System.out.println(gasStation);
-        return new ResponseEntity<>(gasStation, HttpStatus.OK);
+        }
     }
 
     @DeleteMapping("/delete/{id}")

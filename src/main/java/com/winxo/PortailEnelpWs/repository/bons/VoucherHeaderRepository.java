@@ -15,6 +15,6 @@ public interface VoucherHeaderRepository extends JpaRepository<VoucherHeader, In
     @Query(value = "select v from VoucherHeader v WHERE v.slipNumber = :slipNumber")
     Optional<VoucherHeader> findVoucherHeaderBySlipNumber(Long slipNumber);
 
-    @Query(value = "select v from VoucherHeader v WHERE v.isDayOver = false ORDER BY v.id DESC LIMIT 1")
-    Optional<VoucherHeader> findLastVoucherHeaderOpened();
+    @Query(value = "select v from VoucherHeader v WHERE v.gasStation.id = :gas_station_id AND v.isDayOver = false ORDER BY v.id DESC LIMIT 1")
+    Optional<VoucherHeader> findLastVoucherHeaderOpened(Integer gas_station_id);
 }

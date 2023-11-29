@@ -1,6 +1,7 @@
 package com.winxo.PortailEnelpWs.controller.bons;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.winxo.PortailEnelpWs.entities.City;
 import com.winxo.PortailEnelpWs.entities.bons.VoucherControl;
 import com.winxo.PortailEnelpWs.entities.bons.VoucherTemp;
 import com.winxo.PortailEnelpWs.entities.views.View;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,14 +62,22 @@ public class VoucherControlController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<VoucherControl> updateVoucherControl(@RequestBody VoucherControl voucherTemp) {
-        Optional<VoucherControl> userOptional = voucherControlRepository.findVoucherControlById(voucherTemp.getId());
-        if (userOptional.isEmpty())
+    public ResponseEntity<VoucherControl> updateVoucherControl(@RequestBody VoucherControl voucherControl) {
+        if (voucherControlRepository.findVoucherControlById(voucherControl.getId()).isPresent()) {
+            VoucherControl voucherControl1 = voucherControlRepository.findVoucherControlById(voucherControl.getId()).get();
+            voucherControl1.setVoucherAmount(voucherControl.getVoucherAmount());
+            voucherControl1.setVoucherCustomer(voucherControl.getVoucherCustomer());
+            voucherControl1.setVoucherNumber(voucherControl.getVoucherNumber());
+            voucherControl1.setNewlyAdded(voucherControl.getNewlyAdded());
+            voucherControl1.setUpdatedAt(LocalDateTime.now());
+            voucherControl1.setIsDeleted(false);
+            voucherControl1.setIsActivated(voucherControl.getIsActivated());
+            voucherControlRepository.save(voucherControl1);
+            System.out.println(voucherControl1);
+            return new ResponseEntity<>(voucherControl1, HttpStatus.OK);
+        }else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        voucherTemp.setIsDeleted(false);
-        voucherControlRepository.save(voucherTemp);
-        System.out.println(voucherTemp);
-        return new ResponseEntity<>(voucherTemp, HttpStatus.OK);
+        }
     }
 
     @DeleteMapping("/delete/{id}")

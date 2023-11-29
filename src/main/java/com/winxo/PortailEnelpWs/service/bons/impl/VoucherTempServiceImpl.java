@@ -45,6 +45,10 @@ public class VoucherTempServiceImpl implements VoucherTempService
                 .orElseThrow(() -> new NotFoundException("VoucherTemp by voucherNumber " + voucherNumber + " was not found"));
     }
 
+    public List<VoucherTemp>  findVoucherTempByHeader(Integer id) {
+        return voucherTempRepository.findVoucherTempByHeader(id);
+    }
+
     public List<?> findVoucherTempStatistic() {
         return voucherTempRepository.findVoucherTempStatistic();
     }

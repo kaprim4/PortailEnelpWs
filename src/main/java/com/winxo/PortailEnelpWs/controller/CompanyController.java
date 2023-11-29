@@ -1,5 +1,6 @@
 package com.winxo.PortailEnelpWs.controller;
 
+import com.winxo.PortailEnelpWs.entities.City;
 import com.winxo.PortailEnelpWs.entities.Company;
 import com.winxo.PortailEnelpWs.repository.CompanyRepository;
 import com.winxo.PortailEnelpWs.service.CompanyService;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,13 +50,19 @@ public class CompanyController {
 
     @PutMapping("/update")
     public ResponseEntity<Company> updateCompany(@RequestBody Company company) {
-        Optional<Company> userOptional = companyRepository.findCompanyById(company.getId());
-        if (userOptional.isEmpty())
+        if (companyRepository.findCompanyById(company.getId()).isPresent()) {
+            Company company1 = companyRepository.findCompanyById(company.getId()).get();
+            company1.setLibelle(company.getLibelle());
+            company1.setUpdatedAt(LocalDateTime.now());
+            company1.setIsActivated(company.getIsActivated());
+            company1.setIsDeleted(false);
+            company1.setIsActivated(company.getIsActivated());
+            companyRepository.save(company1);
+            System.out.println(company1);
+            return new ResponseEntity<>(company1, HttpStatus.OK);
+        }else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        company.setIsDeleted(false);
-        companyRepository.save(company);
-        System.out.println(company);
-        return new ResponseEntity<>(company, HttpStatus.OK);
+        }
     }
 
     @DeleteMapping("/delete/{id}")

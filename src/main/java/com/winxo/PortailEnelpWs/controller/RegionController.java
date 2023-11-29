@@ -1,5 +1,6 @@
 package com.winxo.PortailEnelpWs.controller;
 
+import com.winxo.PortailEnelpWs.entities.City;
 import com.winxo.PortailEnelpWs.entities.Region;
 import com.winxo.PortailEnelpWs.repository.RegionRepository;
 import com.winxo.PortailEnelpWs.service.RegionService;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,13 +50,19 @@ public class RegionController {
 
     @PutMapping("/update")
     public ResponseEntity<Region> updateRegion(@RequestBody Region region) {
-        Optional<Region> userOptional = regionRepository.findRegionById(region.getId());
-        if (userOptional.isEmpty())
+        if (regionRepository.findRegionById(region.getId()).isPresent()) {
+            Region region1 = regionRepository.findRegionById(region.getId()).get();
+            region1.setLibelle(region.getLibelle());
+            region1.setCode(region.getCode());
+            region1.setUpdatedAt(LocalDateTime.now());
+            region1.setIsDeleted(false);
+            region1.setIsActivated(region.getIsActivated());
+            regionRepository.save(region1);
+            System.out.println(region1);
+            return new ResponseEntity<>(region1, HttpStatus.OK);
+        }else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        region.setIsDeleted(false);
-        regionRepository.save(region);
-        System.out.println(region);
-        return new ResponseEntity<>(region, HttpStatus.OK);
+        }
     }
 
     @DeleteMapping("/delete/{id}")

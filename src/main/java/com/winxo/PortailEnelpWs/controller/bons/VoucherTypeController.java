@@ -1,5 +1,6 @@
 package com.winxo.PortailEnelpWs.controller.bons;
 
+import com.winxo.PortailEnelpWs.entities.City;
 import com.winxo.PortailEnelpWs.entities.bons.VoucherType;
 import com.winxo.PortailEnelpWs.repository.bons.VoucherTypeRepository;
 import com.winxo.PortailEnelpWs.service.bons.VoucherTypeService;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +23,7 @@ public class VoucherTypeController {
     private final VoucherTypeService voucherTypeService;
 
     @Autowired
-    private VoucherTypeRepository gasStationRepository;
+    private VoucherTypeRepository voucherTypeRepository;
 
     @GetMapping("/all")
     public ResponseEntity<List<VoucherType>> getAllVoucherTypes () {
@@ -38,7 +41,7 @@ public class VoucherTypeController {
 
     @GetMapping("/find/{id}")
     public ResponseEntity<VoucherType> getVoucherTypeById (@PathVariable("id") Integer id) {
-        Optional<VoucherType> voucherTypeOptional = gasStationRepository.findById(id);
+        Optional<VoucherType> voucherTypeOptional = voucherTypeRepository.findById(id);
         if (voucherTypeOptional.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         VoucherType voucherType_found = voucherTypeService.findVoucherTypeById(id);
@@ -47,18 +50,23 @@ public class VoucherTypeController {
 
     @PutMapping("/update")
     public ResponseEntity<VoucherType> updateVoucherType(@RequestBody VoucherType voucherType) {
-        Optional<VoucherType> voucherTypeOptional = gasStationRepository.findVoucherTypeById(voucherType.getId());
-        if (voucherTypeOptional.isEmpty())
+        if (voucherTypeRepository.findVoucherTypeById(voucherType.getId()).isPresent()) {
+            VoucherType voucherType1 = voucherTypeRepository.findVoucherTypeById(voucherType.getId()).get();
+            voucherType1.setLibelle(voucherType.getLibelle());
+            voucherType1.setUpdatedAt(LocalDateTime.now());
+            voucherType1.setIsDeleted(false);
+            voucherType1.setIsActivated(voucherType.getIsActivated());
+            voucherTypeRepository.save(voucherType1);
+            System.out.println(voucherType1);
+            return new ResponseEntity<>(voucherType1, HttpStatus.OK);
+        }else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        voucherType.setIsDeleted(false);
-        gasStationRepository.save(voucherType);
-        System.out.println(voucherType);
-        return new ResponseEntity<>(voucherType, HttpStatus.OK);
+        }
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteVoucherType(@PathVariable("id") Integer id) {
-        Optional<VoucherType> voucherTypeOptional = gasStationRepository.findVoucherTypeById(id);
+        Optional<VoucherType> voucherTypeOptional = voucherTypeRepository.findVoucherTypeById(id);
         if (voucherTypeOptional.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         voucherTypeService.deleteVoucherType(id);

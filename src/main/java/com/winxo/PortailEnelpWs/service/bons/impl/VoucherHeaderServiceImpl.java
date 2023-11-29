@@ -49,9 +49,9 @@ public class VoucherHeaderServiceImpl implements VoucherHeaderService
                 .orElseThrow(() -> new NotFoundException("VoucherHeader by slipNumber " + slipNumber + " was not found"));
     }
 
-    public VoucherHeader findLastVoucherHeaderOpened() {
+    public VoucherHeader findLastVoucherHeaderOpened(Integer gas_station_id) {
         return voucherHeaderRepository
-                .findLastVoucherHeaderOpened()
+                .findLastVoucherHeaderOpened(gas_station_id)
                 .orElseThrow(() -> new NotFoundException("VoucherHeader was not found"));
     }
 

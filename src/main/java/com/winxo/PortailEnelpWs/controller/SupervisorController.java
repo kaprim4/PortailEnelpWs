@@ -1,5 +1,6 @@
 package com.winxo.PortailEnelpWs.controller;
 
+import com.winxo.PortailEnelpWs.entities.City;
 import com.winxo.PortailEnelpWs.entities.Supervisor;
 import com.winxo.PortailEnelpWs.repository.SupervisorRepository;
 import com.winxo.PortailEnelpWs.service.SupervisorService;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,13 +50,20 @@ public class SupervisorController {
 
     @PutMapping("/update")
     public ResponseEntity<Supervisor> updateSupervisor(@RequestBody Supervisor supervisor) {
-        Optional<Supervisor> userOptional = supervisorRepository.findSupervisorById(supervisor.getId());
-        if (userOptional.isEmpty())
+        if (supervisorRepository.findSupervisorById(supervisor.getId()).isPresent()) {
+            Supervisor supervisor1 = supervisorRepository.findSupervisorById(supervisor.getId()).get();
+            supervisor1.setFirstName(supervisor.getFirstName());
+            supervisor1.setLastName(supervisor.getLastName());
+            supervisor1.setEmail(supervisor.getEmail());
+            supervisor1.setUpdatedAt(LocalDateTime.now());
+            supervisor1.setIsDeleted(false);
+            supervisor1.setIsActivated(supervisor.getIsActivated());
+            supervisorRepository.save(supervisor1);
+            System.out.println(supervisor1);
+            return new ResponseEntity<>(supervisor1, HttpStatus.OK);
+        }else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        supervisor.setIsDeleted(false);
-        supervisorRepository.save(supervisor);
-        System.out.println(supervisor);
-        return new ResponseEntity<>(supervisor, HttpStatus.OK);
+        }
     }
 
     @DeleteMapping("/delete/{id}")

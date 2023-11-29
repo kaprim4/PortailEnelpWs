@@ -1,14 +1,22 @@
 package com.winxo.PortailEnelpWs.controller.bons;
 
+import com.winxo.PortailEnelpWs.entities.City;
+import com.winxo.PortailEnelpWs.entities.Company;
+import com.winxo.PortailEnelpWs.entities.Supervisor;
+import com.winxo.PortailEnelpWs.entities.bons.VoucherHeader;
 import com.winxo.PortailEnelpWs.entities.bons.VoucherTemp;
+import com.winxo.PortailEnelpWs.entities.bons.VoucherType;
 import com.winxo.PortailEnelpWs.repository.bons.VoucherTempRepository;
+import com.winxo.PortailEnelpWs.service.bons.VoucherHeaderService;
 import com.winxo.PortailEnelpWs.service.bons.VoucherTempService;
+import com.winxo.PortailEnelpWs.service.bons.VoucherTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +27,8 @@ import java.util.Optional;
 public class VoucherTempController {
 
     private final VoucherTempService voucherTempService;
+    private final VoucherHeaderService voucherHeaderService;
+    private final VoucherTypeService voucherTypeService;
 
     @Autowired
     private VoucherTempRepository voucherTempRepository;
@@ -54,6 +64,15 @@ public class VoucherTempController {
         return new ResponseEntity<>(voucherTemp, HttpStatus.OK);
     }
 
+    @GetMapping("/find/header/{header_id}")
+    public ResponseEntity<?> getVoucherTempByHeader (@PathVariable("header_id") Integer header_id) {
+        List<VoucherTemp> voucherTempOptional = voucherTempRepository.findVoucherTempByHeader(header_id);
+        if (voucherTempOptional.isEmpty())
+            return new ResponseEntity<>(voucherTempOptional, HttpStatus.OK);
+        List<VoucherTemp> voucherTemp = voucherTempService.findVoucherTempByHeader(header_id);
+        return new ResponseEntity<>(voucherTemp, HttpStatus.OK);
+    }
+
     @GetMapping("/find/sum")
     public ResponseEntity<List<?>> findVoucherTempStatistic () {
         List<?> voucherNumber = voucherTempRepository.findVoucherTempStatistic();
@@ -65,13 +84,27 @@ public class VoucherTempController {
 
     @PutMapping("/update")
     public ResponseEntity<VoucherTemp> updateVoucherTemp(@RequestBody VoucherTemp voucherTemp) {
-        Optional<VoucherTemp> userOptional = voucherTempRepository.findVoucherTempById(voucherTemp.getId());
-        if (userOptional.isEmpty())
+        if (voucherTempRepository.findVoucherTempById(voucherTemp.getId()).isPresent()) {
+            VoucherTemp voucherTemp1 = voucherTempRepository.findVoucherTempById(voucherTemp.getId()).get();
+            VoucherHeader voucherHeader = voucherHeaderService.findVoucherHeaderById(voucherTemp.getVoucherHeader().getId());
+            VoucherType voucherType = voucherTypeService.findVoucherTypeById(voucherTemp.getVoucherType().getId());
+            voucherTemp1.setVoucherHeader(voucherHeader);
+            voucherTemp1.setVoucherType(voucherType);
+            voucherTemp1.setGasStationOrigin(voucherTemp.getGasStationOrigin());
+            voucherTemp1.setVoucherNumber(voucherTemp.getVoucherNumber());
+            voucherTemp1.setVoucherAmount(voucherTemp.getVoucherAmount());
+            voucherTemp1.setVehiculeNumber(voucherTemp.getVehiculeNumber());
+            voucherTemp1.setBarcode(voucherTemp.getBarcode());
+            voucherTemp1.setPoste_produit(voucherTemp.getPoste_produit());
+            voucherTemp1.setUpdatedAt(LocalDateTime.now());
+            voucherTemp1.setIsDeleted(false);
+            voucherTemp1.setIsActivated(voucherTemp.getIsActivated());
+            voucherTempRepository.save(voucherTemp1);
+            System.out.println(voucherTemp1);
+            return new ResponseEntity<>(voucherTemp1, HttpStatus.OK);
+        }else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        voucherTemp.setIsDeleted(false);
-        voucherTempRepository.save(voucherTemp);
-        System.out.println(voucherTemp);
-        return new ResponseEntity<>(voucherTemp, HttpStatus.OK);
+        }
     }
 
     @DeleteMapping("/delete/{id}")

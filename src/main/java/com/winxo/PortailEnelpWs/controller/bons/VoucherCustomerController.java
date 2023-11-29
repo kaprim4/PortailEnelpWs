@@ -1,5 +1,6 @@
 package com.winxo.PortailEnelpWs.controller.bons;
 
+import com.winxo.PortailEnelpWs.entities.City;
 import com.winxo.PortailEnelpWs.entities.bons.VoucherCustomer;
 import com.winxo.PortailEnelpWs.repository.bons.VoucherCustomerRepository;
 import com.winxo.PortailEnelpWs.service.bons.VoucherCustomerService;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,14 +49,20 @@ public class VoucherCustomerController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<VoucherCustomer> updateVoucherCustomer(@RequestBody VoucherCustomer voucherTemp) {
-        Optional<VoucherCustomer> userOptional = voucherCustomerRepository.findVoucherCustomerById(voucherTemp.getId());
-        if (userOptional.isEmpty())
+    public ResponseEntity<VoucherCustomer> updateVoucherCustomer(@RequestBody VoucherCustomer voucherCustomer) {
+        if (voucherCustomerRepository.findVoucherCustomerById(voucherCustomer.getId()).isPresent()) {
+            VoucherCustomer voucherCustomer1 = voucherCustomerRepository.findVoucherCustomerById(voucherCustomer.getId()).get();
+            voucherCustomer1.setLibelle(voucherCustomer.getLibelle());
+            voucherCustomer1.setCodeSap(voucherCustomer.getCodeSap());
+            voucherCustomer1.setUpdatedAt(LocalDateTime.now());
+            voucherCustomer1.setIsDeleted(false);
+            voucherCustomer1.setIsActivated(voucherCustomer.getIsActivated());
+            voucherCustomerRepository.save(voucherCustomer1);
+            System.out.println(voucherCustomer1);
+            return new ResponseEntity<>(voucherCustomer1, HttpStatus.OK);
+        }else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        voucherTemp.setIsDeleted(false);
-        voucherCustomerRepository.save(voucherTemp);
-        System.out.println(voucherTemp);
-        return new ResponseEntity<>(voucherTemp, HttpStatus.OK);
+        }
     }
 
     @DeleteMapping("/delete/{id}")

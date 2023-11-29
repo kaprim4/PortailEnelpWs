@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,13 +49,18 @@ public class CityController {
 
     @PutMapping("/update")
     public ResponseEntity<City> updateCity(@RequestBody City city) {
-        Optional<City> userOptional = cityRepository.findCityById(city.getId());
-        if (userOptional.isEmpty())
+        if (cityRepository.findCityById(city.getId()).isPresent()) {
+            City city1 = cityRepository.findCityById(city.getId()).get();
+            city1.setLibelle(city.getLibelle());
+            city1.setUpdatedAt(LocalDateTime.now());
+            city1.setIsDeleted(false);
+            city1.setIsActivated(city.getIsActivated());
+            cityRepository.save(city1);
+            System.out.println(city1);
+            return new ResponseEntity<>(city1, HttpStatus.OK);
+        }else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        city.setIsDeleted(false);
-        cityRepository.save(city);
-        System.out.println(city);
-        return new ResponseEntity<>(city, HttpStatus.OK);
+        }
     }
 
     @DeleteMapping("/delete/{id}")
