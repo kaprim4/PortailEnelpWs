@@ -25,6 +25,8 @@ public class VoucherControl
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonView(View.Summary.class)
     private Integer id;
+
+    @JsonView(View.Summary.class)
     private String voucherNumber;
 
     @JsonView(View.Summary.class)

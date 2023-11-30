@@ -73,12 +73,12 @@ public class VoucherTempController {
         return new ResponseEntity<>(voucherTemp, HttpStatus.OK);
     }
 
-    @GetMapping("/find/sum")
-    public ResponseEntity<List<?>> findVoucherTempStatistic () {
-        List<?> voucherNumber = voucherTempRepository.findVoucherTempStatistic();
+    @GetMapping("/find/sum/{header_id}")
+    public ResponseEntity<List<?>> findVoucherTempStatistic (@PathVariable("header_id") Integer header_id) {
+        List<?> voucherNumber = voucherTempRepository.findVoucherTempStatistic(header_id);
         if (voucherNumber.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        List<?> voucherTempStatistic = voucherTempService.findVoucherTempStatistic();
+        List<?> voucherTempStatistic = voucherTempService.findVoucherTempStatistic(header_id);
         return new ResponseEntity<>(voucherTempStatistic, HttpStatus.OK);
     }
 

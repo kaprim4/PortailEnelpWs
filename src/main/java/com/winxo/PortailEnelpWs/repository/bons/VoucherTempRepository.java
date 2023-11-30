@@ -13,8 +13,8 @@ public interface VoucherTempRepository extends JpaRepository<VoucherTemp, Intege
 
     Optional<VoucherTemp> findVoucherTempByVoucherNumber(String voucherNumber);
 
-    @Query("SELECT v.voucherType, SUM(v.voucherAmount) AS voucherAmount, COUNT(v.id) AS voucherCount  FROM VoucherTemp v GROUP BY v.voucherType")
-    List<?> findVoucherTempStatistic();
+    @Query("SELECT v.voucherType, SUM(v.voucherAmount) AS voucherAmount, COUNT(v.id) AS voucherCount  FROM VoucherTemp v WHERE v.voucherHeader.id = :id GROUP BY v.voucherType")
+    List<?> findVoucherTempStatistic(Integer id);
 
     @Query("SELECT COUNT(v.id) FROM VoucherTemp v WHERE v.voucherHeader.id = :id")
     Integer getVoucherCountByHeader(Integer id);

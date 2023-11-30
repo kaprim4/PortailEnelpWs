@@ -49,8 +49,8 @@ public class VoucherTempServiceImpl implements VoucherTempService
         return voucherTempRepository.findVoucherTempByHeader(id);
     }
 
-    public List<?> findVoucherTempStatistic() {
-        return voucherTempRepository.findVoucherTempStatistic();
+    public List<?> findVoucherTempStatistic(Integer id) {
+        return voucherTempRepository.findVoucherTempStatistic(id);
     }
 
     public void deleteVoucherTemp(Integer id) {

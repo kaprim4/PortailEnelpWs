@@ -1,6 +1,8 @@
 package com.winxo.PortailEnelpWs.entities.bons;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.winxo.PortailEnelpWs.entities.views.View;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,13 +19,17 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "ztbons_voucher_customer")
-public class VoucherCustomer {
+public class VoucherCustomer
+{
+    @JsonView(View.Summary.class)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @JsonView(View.Summary.class)
     private String libelle;
 
+    @JsonView(View.Summary.class)
     private String codeSap;
 
     @Column(columnDefinition = "boolean default 1")
