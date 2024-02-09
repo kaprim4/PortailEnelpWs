@@ -1,7 +1,5 @@
 FROM eclipse-temurin:17-jdk-focal
 
-USER root
-
 EXPOSE 8070
 
 ENV APP_HOME /usr/src/app
