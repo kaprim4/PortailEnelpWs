@@ -1,7 +1,7 @@
 FROM eclipse-temurin:17-jdk-focal
 
-RUN addgroup -S temurin \
-    && adduser -S temurin -G temurin
+RUN groupadd -S temurin \
+    && useradd -S temurin -G temurin
 
 USER temurin
 
