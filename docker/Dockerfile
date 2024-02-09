@@ -1,3 +1,10 @@
+FROM alpine
+
+RUN addgroup -S nonroot \
+    && adduser -S nonroot -G nonroot
+
+USER nonroot
+
 FROM eclipse-temurin:17-jdk-focal
 
 EXPOSE 8070
