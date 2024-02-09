@@ -1,6 +1,9 @@
 FROM eclipse-temurin:17-jdk-focal
 
-USER root
+RUN addgroup -S temurin \
+    && adduser -S temurin -G temurin
+
+USER temurin
 
 EXPOSE 8070
 
