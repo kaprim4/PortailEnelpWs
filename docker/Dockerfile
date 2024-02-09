@@ -1,10 +1,5 @@
 FROM eclipse-temurin:17-jdk-focal
 
-RUN groupadd -f temurin \
-    && useradd -f temurin -G temurin
-
-USER temurin
-
 EXPOSE 8070
 
 ENV APP_HOME /usr/src/app
